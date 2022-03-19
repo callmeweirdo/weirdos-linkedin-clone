@@ -10,37 +10,37 @@ import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
 import EventNoteIcon from "@material-ui/icons/EventNote";
 import CalendarViewDayIcon from "@material-ui/icons/CalendarViewDay";
 
-import firebase from './firebase';
-import {db} from "./firebase";
+import firebase from "./firebase";
+import { db } from "./firebase";
 import Post from "./Post";
 
 function Feed() {
+  const [input, setInput] = useState("");
+  const [posts, setPosts] = useState([]);
 
-    const [input, setInput] = useState("");
-    const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    db.collection("posts").orderBy('timestamp', 'desc').onSnapshot((snapshot) =>
+      setPosts(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }))
+      )
+    );
+    // setPosts(snaps);
+  }, []);
 
-    useEffect(() => {
-        db.collection("posts").onSnapshot((snapshot) =>
-          setPosts(
-            snapshot.docs.map((doc) => ({
-                id: doc.id,
-                data: doc.data(),
-            }))
-        ));
-        // setPosts(snaps);
-    },[]);
-
-    const sendPost = (e) => {
-        e.preventDefault();
-        db.collection('posts').add({
-            name: "weirdo",
-            description: "call me weirdo",
-            message: input,
-            photoUrl: "",
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        setInput("");
-    };
+  const sendPost = (e) => {
+    e.preventDefault();
+    db.collection("posts").add({
+      name: "weirdo",
+      description: "call me weirdo",
+      message: input,
+      photoUrl: "",
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    setInput("");
+  };
 
   return (
     <div className="feed">
@@ -48,7 +48,11 @@ function Feed() {
         <div className="feed__input">
           <CreateIcon />
           <form onSubmit={sendPost}>
-            <input type="text" value={input} onChange={(e) => setInput(e.target.value)} />
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
           </form>
         </div>
 
@@ -64,22 +68,19 @@ function Feed() {
         </div>
       </div>
 
-        {posts.map(({id, data:{name, description, message, photourl}}) => {
-            return(
-                <Post 
-                    key={id}
-                    name={name}
-                    description={description}
-                    message={message}
-                    photoUrl={photourl}
-                />
-            )
-        })}
+      {posts.map(({ id, data: { name, description, message, photourl } }) => {
+        return (
+          <Post
+            key={id}
+            name={name}
+            description={description}
+            message={message}
+            photoUrl={photourl}
+          />
+        );
+      })}
     </div>
   );
 }
 
 export default Feed;
-
-
-
