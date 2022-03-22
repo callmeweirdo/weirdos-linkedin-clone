@@ -25,6 +25,7 @@
     width: 100%;
 }
 
+
 .feed__input > form > input{
     border: none;
     flex: 1;
@@ -32,6 +33,11 @@
     outline-width: 0;
     font-weight: 600;
 }
+
+.feed__input > form > button{
+    display: none;
+}
+
 
 .feed__input > form > input:focus{
     border:none;

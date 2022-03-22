@@ -1,19 +1,28 @@
-import React from "react";
+import React, {forwardRef} from "react";
 import "./Post.css";
 
+// ! components imports
 import InputOption from "./InputOption";
 
+// ! redux imports
+import  {useSelector} from 'react-redux';
+import { selectUser } from "./features/userSlice";
+
+// ! styled imports
 import { Avatar } from "@material-ui/core";
 import ThumbUpAltOutlinedIcon from "@material-ui/icons/ThumbUpAltOutlined";
 import ChatOutlinedIcon from "@material-ui/icons/ChatOutlined";
 import ShareOutlinedIcon from "@material-ui/icons/ShareOutlined";
 import SendOutlinedIcon from "@material-ui/icons/SendOutlined";
 
-function Post({ name, description, message, postUrl }) {
+const  Post = forwardRef(({ name, description, message, postUrl }, ref) => {
+
+  const user = useSelector(selectUser);
+
   return (
-    <div className="post">
+    <div ref={ref} className="post">
       <div className="post__header">
-        <Avatar />
+        <Avatar src={user.phptoUrl} >{name[0]}</Avatar>
         <div className="post__info">
           <h4>{name}</h4>
           <p>{description}</p>
@@ -32,6 +41,6 @@ function Post({ name, description, message, postUrl }) {
       </div>
     </div>
   );
-}
+})
 
 export default Post;
